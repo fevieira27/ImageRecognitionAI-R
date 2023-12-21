@@ -30,6 +30,8 @@ model <- application_resnet50(weights = "imagenet")
 # Predict the top 5 classes
 preds <- model %>% predict(image)
 tags <- imagenet_decode_predictions(preds, top = 5)[[1]]
+
+# Filter only tags with higher than 10% confidence score
 filtered_tags <- tags[tags$score >= 0.1,]
 
 # Extract the hashtags
