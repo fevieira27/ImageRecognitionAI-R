@@ -16,7 +16,7 @@ library(tfdatasets)
 # library(imager)
 
 # Load the image
-image_path <- "C:/Users/felip/Downloads/Topaz Photo AI 2.2.1 x64 Portable by 7997/Tratadas/20230416_164842-topaz-denoise-sharpen.jpg"
+image_path <- "C:/Users/XXX.jpg"
 image <- image_load(image_path, target_size = c(224, 224))
 
 # Preprocess the image
