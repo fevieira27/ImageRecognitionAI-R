@@ -1,5 +1,5 @@
 # ImageTagAI-R
-Script to load a local image, use TensorFlow/Keras to identify people/pets/objects and create tags based on ImageNet database classification (from a total of 1000 tags available).
+Script to load a local image, use TensorFlow/Keras to identify people, pets and objects, creating tags based on the ImageNet classification database (from a total of 1000 tags available).
 
 There are 2 types of scripts:
 - A **simple** one that uses only a single AI model
