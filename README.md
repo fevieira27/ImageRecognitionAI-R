@@ -3,7 +3,7 @@ Script to load a local image, use TensorFlow/Keras to identify people/pets/objec
 
 There are 2 types of scripts:
 - A **simple** one that uses only a single AI model
-- A more **complex** that uses 15 models at the same time, knowing that depending on the image some models work better than others. This script aims to get the hashtags from those more prevalent and with higher confidence accross all models.
+- A more **complex** that uses 15 models at the same time, knowing that depending on the image some models work better than others. This script aims to get the classification tags from those more prevalent and with higher prediction confidence accross all models.
 
 
 Future update ideas:
