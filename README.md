@@ -5,6 +5,7 @@ There are 2 types of scripts:
 - A **simple** one that uses only a single AI model;
 - A more **complex** that uses 15 models at the same time, knowing that depending on the image some models work better than others. This script aims to get the classification tags from those more prevalent and with higher prediction confidence accross all models.
 
+![Example of complex script](./img/Example.jpg)
 
 Future update ideas:
 - Get location from latitude/longitude and use some kind of vision AI to identify buildings or landscapes;
