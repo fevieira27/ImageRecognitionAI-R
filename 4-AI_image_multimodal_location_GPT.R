@@ -646,7 +646,7 @@ if (lon!="") {
   } else {
     city <- revgeo(lon, lat, provider = "bing", API = bing_api_key, output = NULL, item = "city")
   }
-  if (address$results[[1]]$address_components[[6]]$long_name != ""){
+  if (address$results[[1]]$address_components[[5]]$long_name != ""){
     country_check <- sapply(address$results[[1]]$address_components, has_any_word, words = "country")
     country <- address$results[[1]]$address_components[country_check]
     country <- country[[1]]$long_name
