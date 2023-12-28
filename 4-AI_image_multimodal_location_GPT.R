@@ -676,9 +676,9 @@ if (file.size(image_path)>4150000){
 # Define a string for the Bing Chat prompt, that will generate the text for the social media post. Feel free to change this to your liking
 str <- ""
 if (name=="Unknown"){
-  str <- paste0("Write an Instagram post for a photo of ",street,", ",city,", searching for the city on the web and getting some information about its history, features and significance; Use these hashtags at the end of the post: ",hashtags)
+  str <- paste0("Give me captions for an Instagram post about a photo of ",street,", ",city,"; Use at least these hashtags at the end of the captions, but feel free to add more: ",hashtags)
 } else{
-  str <- paste0("Write an Instagram post for a photo of the ",name,", ",city,", searching for the name of the place on the web and getting some information about its history, features and significance; Use these hashtags at the end of the post: ",hashtags)
+  str <- paste0("Give me captions for an Instagram post about a photo of the ",name,", ",city,"; Use at least these hashtags at the end of the captions, but feel free to add more: ",hashtags)
 }
 
 # Encode the string using URLencode
