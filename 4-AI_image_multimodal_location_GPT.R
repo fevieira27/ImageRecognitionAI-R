@@ -594,13 +594,16 @@ if(exists("df_land") && all(c("latitude", "longitude") %in% names(df_land))){ # 
 if (length(landmarks$score)!=0){
   landmarks <- landmarks %>% select(description, latitude, longitude, source, score)
 } else {
-  landmarks <- landmarks %>% select(description, latitude, longitude, source)
+    if (length(landmarks$description)!=0){
+	landmarks <- landmarks %>% select(description, latitude, longitude, source)
+    }
 }
 
 # Check if the landmark variable is empty
 if (length(landmarks$latitude)==1 && landmarks$latitude=="") {
     # Set the name to "Unknown" and GPS coordinates from image exif data
     name <- "Unknown"
+    source <- ""
     if (exif_data$GPSLatitude != "") {
       lat <- exif_data$GPSLatitude
       lon <- exif_data$GPSLongitude
