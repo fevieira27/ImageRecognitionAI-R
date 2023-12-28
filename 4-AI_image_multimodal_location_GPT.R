@@ -548,7 +548,6 @@ date <- format(exif_data$CreateDate, format = "%d/%B/%Y")
 if(exists("df_land") && all(c("latitude", "longitude") %in% names(df_land))){ # Google Places found landmarks
   df_land$source <- "Google Maps Places"
   df_land <- df_land %>% select(description, latitude, longitude, source)
-#  landmarks <- landmarks %>% select(description, latitude, longitude, source)
   landmarks <- rbind(landmarks, df_land, fill=TRUE)  
 
 } else { # If Google Vision and Places API were not able to find any landmark, try Bing maps API for nature-related POI
@@ -590,6 +589,12 @@ if(exists("df_land") && all(c("latitude", "longitude") %in% names(df_land))){ # 
 	landmarks$longitude <- ""
 	source <- ""
   }
+}
+
+if (length(landmarks$score)!=0){
+  landmarks <- landmarks %>% select(description, latitude, longitude, source, score)
+} else {
+  landmarks <- landmarks %>% select(description, latitude, longitude, source)
 }
 
 # Check if the landmark variable is empty
@@ -688,6 +693,7 @@ browseURL(url)
 # shell.exec(url)
 # browseURL("https://www.bing.com/search?showconv=1&sendquery=1&q=Hello%20Bing")
 
-# Show main results in R Console
-  cat(" Hashtags:     ", hashtags, "\n", "GPS Coordin.: ", lat, ",", lon, "\n", "Landmark Name:", name, "\n", "Landm. Source:", source, "\n", "Text Found:   ", paste(text, collapse = ", "), "\n", "Full address: ", address, "\n", "City:         ", city, "\n", "Country:      ", country, "\n")
+# Show main results in R Console, which could be used on prompt for Bing Chat
+  cat(" Hashtags:     ", hashtags, "\n", "GPS Coordin.: ", lat, ",", lon, "\n", "Landmark Name:", name, "\n", "Landm. Source:", source, "\n", "Text Found:   ", paste(text, collapse = ", "), "\n", "Full address: ", address, "\n", "City:         ", city, "\n", "Country:      ", country, "\n", "Camera :      ", exif_data$Make, exif_data$Model, "\n", "Date   :      ", date, "\n")
+
 
