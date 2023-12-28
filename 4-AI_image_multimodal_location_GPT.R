@@ -583,11 +583,11 @@ if(exists("df_land") && all(c("latitude", "longitude") %in% names(df_land))){ # 
 	colnames(df_land2) <- c("description", "latitude", "longitude", "type")
 
 	landmarks <- df_land2
-	source <- "Bing Location Recognition"
+	landmarks$source <- "Bing Location Recognition"
   } else {
 	landmarks$latitude <- ""
 	landmarks$longitude <- ""
-	source <- ""
+	landmarks$source <- ""
   }
 }
 
