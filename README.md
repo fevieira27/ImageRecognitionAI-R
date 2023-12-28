@@ -1,4 +1,4 @@
-# ImageTagAI-R
+# ImageAI-R
 Script to load a local image, use TensorFlow/Keras to identify people, pets and objects, creating tags based on the ImageNet classification database (from a total of 1000 tags available).
 
 There are now 3 types of scripts:
@@ -8,6 +8,4 @@ There are now 3 types of scripts:
 - The third script has all 15 models above, but is also using **Google and Azure Vision AI** (API keys required) to further improve tags and to identify landmarks and addresses.
 
 ![Example of complex script with Vision APIs for Location](./img/Location_Example.jpg)
-
-Future update ideas:
-- Based on all the above knowledge about the image, generate a social media text using AI with location and hashtags for easy posting.
+- Based on all the above knowledge about the image, the forth script generates a prompt for Bing Chat requesting a social media text for easier posting, feeding the AI with location and hashtags identified.
