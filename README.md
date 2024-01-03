@@ -1,5 +1,5 @@
 # ImageAI-R
-R scripts developed to load a local image, identify people/pets/objects and create tags based on the ImageNet classification database (from a total of 1000 tags available). Additionally, it tries to identify the landmark/location based on Google/Azure Vision and Google/Bing maps API, using all this information to automatically generate a prompt to Bing Chat.
+R scripts developed to load an image (local or internet), identify people/pets/objects and create tags based on the ImageNet classification database (from a total of 1000 tags available). Additionally, it tries to identify the landmark/location based on Google/Azure Vision and Google/Bing maps API, using all this information to automatically generate a prompt to Bing Chat.
 
 There are 4 types of scripts:
 - A **simple** one that uses only a single AI model for tag identification ([1-AI_image_tag_simple.R](1-AI_image_tag_simple.R));
