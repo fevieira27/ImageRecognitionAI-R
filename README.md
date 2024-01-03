@@ -3,16 +3,16 @@ ImageRecognitionAI-R is a collection of R scripts that can load an image from a 
 
 Based on the image recognition tags and location data gathered, ImageRecognitionAI-R script 4 also automatically creates a prompt for <a href="https://www.bing.com/chat">Bing Chat</a>, which can generate a social media post using AI.
 
-There are 4 types of scripts:
+<ins>**There are 4 types of scripts:**</ins>
 - A **simple** one that uses only a single AI model for image recognition ([1-AI_image_tag_simple.R](1-AI_image_tag_simple.R));
   
-- A second more **complex** that does tag identification using 15 models at the same time, based on the knowledge that, depending on what is contained in the image, some models work better than others. This script aims to get the classification tags from those more prevalent and with higher prediction confidence accross all models ([2-AI_image_tag_multimodal.R](2-AI_image_tag_multimodal.R));
+- A second more **complex** that does image recognition using 15 AI models at the same time, based on the knowledge that, depending on what is contained in the image, some models work better than others. This script aims to get the classification tags from those that are more prevalent and with higher prediction confidence accross all models ([2-AI_image_tag_multimodal.R](2-AI_image_tag_multimodal.R));
 ![Example of complex script](./img/Example.jpg)
 
-- The third script still uses all 15 models above, but is also using **Google and Azure Vision AI** (API keys required) to further improve tags and to identify landmarks and addresses ([3-AI_image_multimodal_location.R](3-AI_image_multimodal_location.R));
+- The third script still uses all the previous 15 AI models, but is also using **Google and Azure Vision AI** (API keys required) to further improve tags and to identify landmarks and addresses ([3-AI_image_multimodal_location.R](3-AI_image_multimodal_location.R));
 ![Example of complex script with Vision APIs for Location](./img/Location_Example.jpg)
 
-- Based on all the above knowledge about the image, the forth script improves the results further by also using **Google Maps API and Bing Maps API** (API keys required) to more accurately search for the location/landmark name based on GPS data and hashtags found on image. Finally, it generates a **prompt for Bing Chat** on the default browser requesting a social media text for easier posting, feeding the AI with probable location and hashtags identified ([4-AI_image_multimodal_location_GPT.R](4-AI_image_multimodal_location_GPT.R)).
+- Based on all the above knowledge about the image, the forth script improves the results further by also using **Google Maps API and Bing Maps API** (API keys required) to more accurately search for the location or landmark name based on GPS data and hashtags found on image. Finally, it generates a **prompt for Bing Chat** on the default browser requesting a social media text for easier posting, feeding the AI with probable location and hashtags identified ([4-AI_image_multimodal_location_GPT.R](4-AI_image_multimodal_location_GPT.R)).
 ![Example of complex script with Vision and Maps APIs for Location](./img/Location_GPT_Example.jpg)
 ![Example of GPT Prompt](./img/GPT_Example.jpg)
 
