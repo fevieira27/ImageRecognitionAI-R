@@ -550,7 +550,7 @@ if(exists("df_land") && all(c("latitude", "longitude") %in% names(df_land))){ # 
   df_land <- df_land %>% select(description, latitude, longitude, source)
   landmarks <- rbind(landmarks, df_land, fill=TRUE)  
 
-} else { # If Google Vision and Places API were not able to find any landmark, try Bing maps API for nature-related POI
+} else { # If Google Places API was not able to find any landmark, try Bing maps API for nature-related POI
 
 	# Define the URL for the Bing Location Recognition service
 	url <- ""
@@ -581,24 +581,27 @@ if(exists("df_land") && all(c("latitude", "longitude") %in% names(df_land))){ # 
 	}
 
 	colnames(df_land2) <- c("description", "latitude", "longitude", "type")
+	df_land2$source <- "Bing Location Recognition"
+	df_land2 <- df_land2 %>% select(description, latitude, longitude, source)
 
-	landmarks <- df_land2
-	landmarks$source <- "Bing Location Recognition"
-  } else {
-	landmarks$latitude <- ""
-	landmarks$longitude <- ""
-	landmarks$source <- ""
+	if(exists("df_land2") && all(c("latitude", "longitude") %in% names(df_land2))){ # Bing Location has found nature POI
+	    landmarks <- rbind(landmarks, df_land2, fill=TRUE)  
+	}
   }
 }
 
-if (length(landmarks$score)!=0){
+if (length(landmarks$score)!=0){ # Google Vision has found landmarks
   landmarks <- landmarks %>% select(description, latitude, longitude, source, score)
 } else {
-    if (length(landmarks$description)!=0){
+    if (length(landmarks$description)!=0){ # Google Places or Bing Location have found possible POI
 	landmarks <- landmarks %>% select(description, latitude, longitude, source)
+    } else {
+  	landmarks$latitude <- ""
+	landmarks$longitude <- ""
+	landmarks$source <- ""
     }
 }
-
+	
 # Check if the landmark variable is empty
 if (length(landmarks$latitude)==1 && landmarks$latitude=="") {
     # Set the name to "Unknown" and GPS coordinates from image exif data
@@ -612,24 +615,31 @@ if (length(landmarks$latitude)==1 && landmarks$latitude=="") {
 	lon <- ""
     } 
 }else { # Identify which of the probable landmarks is closer to the actual image exif GPS data
-   if (exif_data$GPSLatitude != "") { # If there are GPS coordinates on image exif data
-    dist <- distm(landmarks[, c("longitude", "latitude")], exif_data[, c("GPSLongitude", "GPSLatitude")])
-    closest_landmark <- landmarks[which.min(dist), ]
+   if (length(landmarks$score)!=0){ # Google Vision has found landmarks, so use the highest score
+		# sort df by score in descending order
+		landmarks <- landmarks[order(landmarks$score, decreasing = TRUE), ]
+		landmarks <- head(landmarks, 1)
+		name <- landmarks$description
+	    	lat <- landmarks$latitude
+	    	lon <- landmarks$longitude
+   } else { # Find the POI from Google Places or Bing Location that is closest to GPS coordinates
+   	if (exif_data$GPSLatitude != "") { # If there are GPS coordinates on image exif data    # Identify which of the probable landmarks is closer to the actual image exif data
+	    dist <- distm(landmarks[, c("longitude", "latitude")], exif_data[, c("GPSLongitude", "GPSLatitude")])
+	    closest_landmark <- landmarks[which.min(dist), ]
 
-    # Extract the name and coordinates of the landmark from Google Vision
-    name <- closest_landmark$description
-    source <- closest_landmark$source
-    # lat <- closest_landmark$latitude
-    # lon <- closest_landmark$longitude
-    lat <- exif_data$GPSLatitude
-    lon <- exif_data$GPSLongitude
-   } else { # If the is no GPS data on exif, use highest score from Google Cloud Vision or, if even that wasn't found, the first one brought by Google Maps API
-	# sort df by score in descending order
-	landmarks <- landmarks[order(landmarks$score, decreasing = TRUE), ]
-	landmarks <- head(landmarks, 1)
-	name <- landmarks$description
-    	lat <- landmarks$latitude
-    	lon <- landmarks$longitude
+	    # Extract the name and coordinates of the landmark from Google Vision
+	    name <- closest_landmark$description
+	    source <- closest_landmark$source
+	    # lat <- closest_landmark$latitude
+	    # lon <- closest_landmark$longitude
+	    lat <- exif_data$GPSLatitude
+	    lon <- exif_data$GPSLongitude
+	} else { # If there is no GPS data on exif and no Google Vision landmarks, use the first one brought by Google Places API or Bing Location
+		landmarks <- head(landmarks, 1)
+		name <- landmarks$description
+	    	lat <- landmarks$latitude
+	    	lon <- landmarks$longitude
+	}
    }
 }
 
