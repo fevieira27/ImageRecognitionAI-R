@@ -6,7 +6,7 @@ Based on the image recognition tags and location data gathered, ImageRecognition
 <ins>**There are 4 types of scripts:**</ins>
 - A **simple** one that uses only a single AI model for image recognition ([1-AI_image_tag_simple.R](1-AI_image_tag_simple.R));
   
-- A second more **complex** that does image recognition using 15 AI models at the same time, based on the knowledge that, depending on what is contained in the image, some models work better than others. This script aims to get the classification tags from those that are more prevalent and with higher prediction confidence accross all models ([2-AI_image_tag_multimodal.R](2-AI_image_tag_multimodal.R));
+- A second (**more complex**) one that does image recognition using 15 AI models at the same time, based on the knowledge that, depending on what is contained in the image, some models work better than others. This script aims to get the classification tags from those that are more prevalent and with higher prediction confidence accross all models ([2-AI_image_tag_multimodal.R](2-AI_image_tag_multimodal.R));
 ![Example of complex script](./img/Example.jpg)
 
 - The third script still uses all the previous 15 AI models, but is also using **Google and Azure Vision AI** (API keys required) to further improve tags and to identify landmarks and addresses ([3-AI_image_multimodal_location.R](3-AI_image_multimodal_location.R));
