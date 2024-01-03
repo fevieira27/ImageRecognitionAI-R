@@ -33,4 +33,4 @@ Based on the image recognition tags and location data gathered, ImageRecognition
 - NasNetLarge
 - EfficientNet B7
 - Azure Vision AI
-- Google Cloud Vision
+- Google Cloud Vision AI
