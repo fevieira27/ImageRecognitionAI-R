@@ -16,7 +16,7 @@ Based on the image recognition tags and location data gathered, ImageRecognition
 ![Example of complex script with Vision and Maps APIs for Location](./img/Location_GPT_Example.jpg)
 ![Example of GPT Prompt](./img/GPT_Example.jpg)
 
-# Image recognition models being used:
+# Image recognition AI models being used:
 - MobileNetV3
 - VGG16
 - VGG19
