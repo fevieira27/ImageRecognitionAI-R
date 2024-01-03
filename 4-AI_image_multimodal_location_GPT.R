@@ -622,6 +622,7 @@ if (length(landmarks$latitude)==1 && landmarks$latitude=="") {
 		name <- landmarks$description
 	    	lat <- landmarks$latitude
 	    	lon <- landmarks$longitude
+	   	source <- landmarks$source
    } else { # Find the POI from Google Places or Bing Location that is closest to GPS coordinates
    	if (exif_data$GPSLatitude != "") { # If there are GPS coordinates on image exif data    # Identify which of the probable landmarks is closer to the actual image exif data
 	    dist <- distm(landmarks[, c("longitude", "latitude")], exif_data[, c("GPSLongitude", "GPSLatitude")])
@@ -639,6 +640,7 @@ if (length(landmarks$latitude)==1 && landmarks$latitude=="") {
 		name <- landmarks$description
 	    	lat <- landmarks$latitude
 	    	lon <- landmarks$longitude
+	    	source <- landmarks$source		
 	}
    }
 }
