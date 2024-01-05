@@ -1,3 +1,11 @@
+[![Version](https://img.shields.io/github/release/fevieira27/ImageRecognitionAI-R)](https://github.com/fevieira27/ImageRecognitionAI-R/releases/latest)
+[![Release date](https://img.shields.io/github/release-date/fevieira27/ImageRecognitionAI-R)](https://github.com/fevieira27/ImageRecognitionAI-R/releases/latest)
+![GitHub all releases](https://img.shields.io/github/downloads/fevieira27/ImageRecognitionAI-R/total)
+![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/y/fevieira27/ImageRecognitionAI-R)
+![GitHub Repo stars](https://img.shields.io/github/stars/fevieira27/ImageRecognitionAI-R)
+![GitHub forks](https://img.shields.io/github/forks/fevieira27/ImageRecognitionAI-R)
+![GitHub watchers](https://img.shields.io/github/watchers/fevieira27/ImageRecognitionAI-R)
+
 # ImageRecognitionAI-R
 ImageRecognitionAI-R is a collection of R scripts that can load an image from a local or online source and recognize various elements in it using AI Image Recognition CNN (<a href="https://en.wikipedia.org/wiki/Convolutional_neural_network">Convolutional Neural Network</a>) models, mostly trained on the <a href="https://en.wikipedia.org/wiki/ImageNet">ImageNet</a> database, which has 1000 categories of objects, people, and animals that could be identified within each image. The last script (number 4) also attempts to detect the location or landmark in the image based on <a href="https://cloud.google.com/vision/">Google Cloud Vision AI</a>, <a href="https://azure.microsoft.com/en-us/products/ai-services/ai-vision">Azure Vision AI</a>, <a href="https://developers.google.com/maps/documentation/places/web-service/overview">Google Places API</a> and <a href="https://www.microsoft.com/en-us/maps/bing-maps/location-recognition">Bing Location Recognition API</a>.
 
@@ -34,3 +42,23 @@ Based on the image recognition tags and location data gathered, ImageRecognition
 - EfficientNet B7
 - Azure Vision AI
 - Google Cloud Vision AI
+
+# Search Hit Counter
+![GitHub search hit counter](https://img.shields.io/github/search/fevieira27/ImageRecognitionAI-R/r)
+![GitHub search hit counter](https://img.shields.io/github/search/fevieira27/ImageRecognitionAI-R/ai)
+![GitHub search hit counter](https://img.shields.io/github/search/fevieira27/ImageRecognitionAI-R/deep-learning)
+![GitHub search hit counter](https://img.shields.io/github/search/fevieira27/ImageRecognitionAI-R/machine-learning)
+![GitHub search hit counter](https://img.shields.io/github/search/fevieira27/ImageRecognitionAI-R/text-generation)
+![GitHub search hit counter](https://img.shields.io/github/search/fevieira27/ImageRecognitionAI-R/neural-networks)
+![GitHub search hit counter](https://img.shields.io/github/search/fevieira27/ImageRecognitionAI-R/image-classification)
+![GitHub search hit counter](https://img.shields.io/github/search/fevieira27/ImageRecognitionAI-R/image-recognition)
+![GitHub search hit counter](https://img.shields.io/github/search/fevieira27/ImageRecognitionAI-R/convolutional-neural-networks)
+![GitHub search hit counter](https://img.shields.io/github/search/fevieira27/ImageRecognitionAI-R/gpt)
+![GitHub search hit counter](https://img.shields.io/github/search/fevieira27/ImageRecognitionAI-R/image-analysis)
+![GitHub search hit counter](https://img.shields.io/github/search/fevieira27/ImageRecognitionAI-R/keras-tensorflow)
+![GitHub search hit counter](https://img.shields.io/github/search/fevieira27/ImageRecognitionAI-R/cloudvision)
+![GitHub search hit counter](https://img.shields.io/github/search/fevieira27/ImageRecognitionAI-R/cloud-vision-api)
+![GitHub search hit counter](https://img.shields.io/github/search/fevieira27/ImageRecognitionAI-R/multimodal-deep-learning)
+![GitHub search hit counter](https://img.shields.io/github/search/fevieira27/ImageRecognitionAI-R/maps-api)
+![GitHub search hit counter](https://img.shields.io/github/search/fevieira27/ImageRecognitionAI-R/generative-ai)
+               
