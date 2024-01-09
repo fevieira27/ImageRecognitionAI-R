@@ -3,6 +3,7 @@
 #
 # After that, run the below command in R:
 # remotes::install_github("rstudio/tensorflow")
+# remotes::install_github("Azure/AzureCognitive")
 #
 # More information about the prediction models used, their parameters and expected results can also be found here:
 # https://keras.io/api/applications/
@@ -45,6 +46,7 @@ if (!require("dplyr")) { install.packages("dplyr") }
 if (!require("imager")) { install.packages("imager") }
 if (!require("magick")) { install.packages("magick") }
 if (!require("AzureVision")) { install.packages("AzureVision") }
+if (!require("AzureCognitive")) { install.packages("AzureCognitive") }
 if (!require("googleAuthR")) { install.packages("googleAuthR") }
 if (!require("googleCloudVisionR")) { install.packages("googleCloudVisionR") }
 if (!require("ggmap")) { install.packages("ggmap") }
@@ -58,25 +60,28 @@ if (!require("purrr")) { install.packages("purrr") }
 # Set the API keys
   # Sys.setenv(AZURE_COMPUTER_VISION_KEY = azure_api_key)
   # Sys.setenv("GCV_AUTH_FILE" = "/fullpath/to/auth.json")
-  
-  # Google Maps API
-  google_api_key <- readLines("C:/XXXXX/Google_API_key.txt", warn=FALSE)
-  register_google(key = google_api_key)
-  # Bing Maps API
-  bing_api_key <- readLines("C:/XXXXX/Bing_API_key.txt", warn=FALSE)
-  # Google Cloud API
+
+  # Google Cloud API information
   options(googleAuthR.client_id = "XXXXX.apps.googleusercontent.com")
   options(googleAuthR.client_secret = "XXXXX")
   options(googleAuthR.scopes.selected = c("https://www.googleapis.com/auth/cloud-platform"))
-  # Azure Cloud API
+  # Google Maps API key
+  google_api_key <- readLines("C:/XXXXX/Google_API_key.txt", warn=FALSE)
+  register_google(key = google_api_key)
+  # Bing Maps API key
+  bing_api_key <- readLines("C:/XXXXX/Bing_API_key.txt", warn=FALSE)
+  # Azure API key
   azure_api_key <- readLines("C:/XXXXX/Azure_API_key.txt", warn=FALSE)
+  # Azure Computer Vision API information
+  cognitiveservicesURL <-"https://XXXXX.cognitiveservices.azure.com/"
   vis <- computervision_endpoint(
-    url="https://XXXXX.cognitiveservices.azure.com/",
+    url=cognitiveservicesURL,
     key=azure_api_key
   )
 
-# Authenticate with the Google Cloud Vision API
+# Authenticate with the Google Cloud Vision API  (ONLY NEEDED FOR THE FIRST TIME OR IF TOKEN IS LOST)
 if (gar_has_token()!=TRUE) {
+  # This code will run automatically if no Google auth token is found. However, the token might exist but has expired, so if this is the case, then please run the below line manually
   gar_auth(email = "XXXXX")
 }
 
@@ -428,7 +433,7 @@ concat <- rbind(concat,resultsAzure)
 concat <- rbind(concat,resultsGoogle)
 ############################### END Cloud ML Models
 
-# Raw data from results of all models
+# Raw data from results of all 15 models + 2 APIs
 # print(concat)
 
 # Create a dataframe with summarized results accross all models
@@ -484,21 +489,59 @@ date <- format(exif_data$CreateDate, format = "%d/%B/%Y")
     landmarks$source <- "Google Cloud Vision"
   } 
 
-  # Add Google Maps Places API landmarks to the previous Google Vision results
-  place_types <- c("accounting","airport","amusement_park","aquarium","art_gallery","atm","bakery","bank","bar","beauty_salon","bicycle_store","book_store","bowling_alley","bus_station","cafe","campground","car_dealer","car_rental","car_repair","car_wash","casino","cemetery","church","city_hall","clothing_store","convenience_store","courthouse","dentist","department_store","doctor","drugstore","electrician","electronics_store","embassy","fire_station","florist","funeral_home","furniture_store","gas_station","gym","hair_care","hardware_store","hindu_temple","home_goods_store","hospital","insurance_agency","jewelry_store","laundry","lawyer","library","light_rail_station","liquor_store","local_government_office","locksmith","lodging","meal_delivery","meal_takeaway","mosque","movie_rental","movie_theater","moving_company","museum","night_club","painter","park","pet_store","pharmacy","physiotherapist","plumber","police","post_office","primary_school","real_estate_agency","restaurant","roofing_contractor","rv_park","school","secondary_school","shoe_store","shopping_mall","spa","stadium","storage","store","subway_station","supermarket","synagogue","taxi_stand","tourist_attraction","train_station","transit_station","travel_agency","university","veterinary_care","zoo","landmark","place_of_worship","town_square")
+# Standalone Azure Computer Vision endpoint (must provide subscription key and cognitive services name)
+endp <- cognitive_endpoint(cognitiveservicesURL,
+    service_type="ComputerVision", key=azure_api_key)
 
-  # Check if any word from the list is in the text
-  result <- sapply(place_types, grepl, hashwords, fixed = TRUE)
+# read the local image file as raw bytes, reducing to 4Mb (if needed) which is Azure's max limit
+if (file.size(image_path)>4150000){
+  raw_vector <- readBin(image_path, "raw", 4150000)
+} else {
+  raw_vector <- readBin(image_path, "raw", file.info(image_path)$size)
+}
 
-  # Print which words from the Google Places API were found in the hashtags based on the image
-  found_words <- place_types[result]
-  tourism_tags <- c("castle","monastery","bridge","palace","statue","bell_cote")
-  if (length(tourism_tags[sapply(tourism_tags, grepl, hashwords, fixed = TRUE)])>0) {
-    found_words <- c(found_words, "tourist_attraction")
-  }
+# call the cognitive endpoint to analyze the image for landmarks
+landmarkAzure <- call_cognitive_endpoint(endp, operation = "analyze",
+	body = raw_vector,
+	encode = "raw",
+	options = list(details = "landmarks"),
+	http_verb="POST")
 
-  url <- ""
-  url <- paste0("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=",
+if (length(landmarkAzure$categories[[1]]$detail$landmarks)>0){
+  landmarkAzure <- dplyr::bind_rows(lapply(landmarkAzure$categories, as.data.frame.list))
+  landmarkAzure <- landmarkAzure %>% select(detail.landmarks.name, detail.landmarks.confidence)
+
+  # Keep only the 3 columns that are of interest
+  landmarkAzure <- landmarkAzure[, grepl("landmarks.name|confidence", colnames(landmarkAzure))]
+
+  # Rename, reorder and add blank columns to keep the df consistent with other solutions
+  colnames(landmarkAzure) <- c("description", "score")
+  landmarkAzure$latitude <- ""
+  landmarkAzure$longitude <- ""
+  landmarkAzure$source <- "Azure Vision API"
+  landmarkAzure <- landmarkAzure %>% select(description, latitude, longitude, source, score)
+}
+
+# Add Azure Vision landmarks to the previous Google Vision results, if any result was found
+if(exists("landmarkAzure") && all(c("description", "score") %in% names(landmarkAzure))){ # Azure Vision found landmarks
+  landmarks <- rbind(landmarks, landmarkAzure, fill=TRUE)  
+}
+
+# Add Google Maps Places API landmarks to the previous Google Vision results
+place_types <- c("accounting","airport","amusement_park","aquarium","art_gallery","atm","bakery","bank","bar","beauty_salon","bicycle_store","book_store","bowling_alley","bus_station","cafe","campground","car_dealer","car_rental","car_repair","car_wash","casino","cemetery","church","city_hall","clothing_store","convenience_store","courthouse","dentist","department_store","doctor","drugstore","electrician","electronics_store","embassy","fire_station","florist","funeral_home","furniture_store","gas_station","gym","hair_care","hardware_store","hindu_temple","home_goods_store","hospital","insurance_agency","jewelry_store","laundry","lawyer","library","light_rail_station","liquor_store","local_government_office","locksmith","lodging","meal_delivery","meal_takeaway","mosque","movie_rental","movie_theater","moving_company","museum","night_club","painter","park","pet_store","pharmacy","physiotherapist","plumber","police","post_office","primary_school","real_estate_agency","restaurant","roofing_contractor","rv_park","school","secondary_school","shoe_store","shopping_mall","spa","stadium","storage","store","subway_station","supermarket","synagogue","taxi_stand","tourist_attraction","train_station","transit_station","travel_agency","university","veterinary_care","zoo","landmark","place_of_worship","town_square")
+
+# Check if any word from the list is in the text
+result <- sapply(place_types, grepl, hashwords, fixed = TRUE)
+
+# Print which words from the Google Places API were found in the hashtags based on the image
+found_words <- place_types[result]
+tourism_tags <- c("castle","monastery","bridge","palace","statue","bell_cote")
+if (length(tourism_tags[sapply(tourism_tags, grepl, hashwords, fixed = TRUE)])>0) {
+  found_words <- c(found_words, "tourist_attraction")
+}
+
+url <- ""
+url <- paste0("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=",
               exif_data$GPSLatitude, ",", exif_data$GPSLongitude,
               "&types=point_of_interest&rankby=distance&key=",google_api_key)
 
@@ -679,13 +722,14 @@ if (lon!="") {
 
 # Extract the text from the image using Azure Computer Vision API (OCR)
 if (file.size(image_path)>4150000){
-  con <- file(image_path, "rb")
-  raw_vector <- readBin(con, what = raw(), n = 4150000)
   text <- read_text(vis, raw_vector, detect_orientation = TRUE, language = "en")
-  close(con)
 } else {
   text <- read_text(vis, image_path, detect_orientation = TRUE, language = "en")
-  # text <- analyze(vis, image_path, domain = "landmarks", feature_types = "description")$description$captions$text
+}
+
+# If no text was found using OCR, try to describe the image using Azure AI:
+if (length(text)==0){
+  text <- analyze(vis, image_path, domain = "landmarks", feature_types = "description")$description$captions$text
 }
 
 # Define a string for the Bing Chat prompt, that will generate the text for the social media post. Feel free to change this to your liking
@@ -709,6 +753,6 @@ browseURL(url)
 # browseURL("https://www.bing.com/search?showconv=1&sendquery=1&q=Hello%20Bing")
 
 # Show main results in R Console, which could be used on prompt for Bing Chat
-  cat(" Hashtags:     ", hashtags, "\n", "GPS Coordin.: ", lat, ",", lon, "\n", "Landmark Name:", name, "\n", "Landm. Source:", source, "\n", "Text Found:   ", paste(text, collapse = ", "), "\n", "Full address: ", address, "\n", "City:         ", city, "\n", "Country:      ", country, "\n", "Camera :      ", exif_data$Make, exif_data$Model, "\n", "Date   :      ", date, "\n")
+  cat(" Hashtags:     ", hashtags, "\n", "GPS Coordin.: ", lat, ",", lon, "\n", "Landmark Name:", name, "\n", "Landm. Source:", source, "\n", "Text/Descript:", paste(text, collapse = ", "), "\n", "Full address: ", address, "\n", "City:         ", city, "\n", "Country:      ", country, "\n", "Camera :      ", exif_data$Make, exif_data$Model, "\n", "Date   :      ", date, "\n")
 
 
