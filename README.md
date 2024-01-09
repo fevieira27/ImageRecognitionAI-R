@@ -46,6 +46,7 @@ Based on the image recognition tags and location data gathered, ImageRecognition
 # Search Hit Counter
 ![GitHub search hit counter](https://img.shields.io/github/search/fevieira27/ImageRecognitionAI-R/r)
 ![GitHub search hit counter](https://img.shields.io/github/search/fevieira27/ImageRecognitionAI-R/ai)
+![GitHub search hit counter](https://img.shields.io/github/search/fevieira27/ImageRecognitionAI-R/cloudvision)
 ![GitHub search hit counter](https://img.shields.io/github/search/fevieira27/ImageRecognitionAI-R/deep-learning)
 ![GitHub search hit counter](https://img.shields.io/github/search/fevieira27/ImageRecognitionAI-R/machine-learning)
 ![GitHub search hit counter](https://img.shields.io/github/search/fevieira27/ImageRecognitionAI-R/text-generation)
@@ -56,7 +57,6 @@ Based on the image recognition tags and location data gathered, ImageRecognition
 ![GitHub search hit counter](https://img.shields.io/github/search/fevieira27/ImageRecognitionAI-R/gpt)
 ![GitHub search hit counter](https://img.shields.io/github/search/fevieira27/ImageRecognitionAI-R/image-analysis)
 ![GitHub search hit counter](https://img.shields.io/github/search/fevieira27/ImageRecognitionAI-R/keras-tensorflow)
-![GitHub search hit counter](https://img.shields.io/github/search/fevieira27/ImageRecognitionAI-R/cloudvision)
 ![GitHub search hit counter](https://img.shields.io/github/search/fevieira27/ImageRecognitionAI-R/cloud-vision-api)
 ![GitHub search hit counter](https://img.shields.io/github/search/fevieira27/ImageRecognitionAI-R/multimodal-deep-learning)
 ![GitHub search hit counter](https://img.shields.io/github/search/fevieira27/ImageRecognitionAI-R/maps-api)
