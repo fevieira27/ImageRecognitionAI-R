@@ -140,6 +140,13 @@ if (info$height > info$width) {
 }
 plot(img)
 
+# read the local image file as raw bytes, reducing to 4Mb (if needed) which is Azure's max limit
+if (file.size(image_path)>4150000){
+  raw_vector <- readBin(image_path, "raw", 4150000)
+} else {
+  raw_vector <- readBin(image_path, "raw", file.info(image_path)$size)
+}
+
 # Resizing image based on model requirements
 image_224 <- image_load(image_path, target_size = c(224, 224))
 image_299 <- image_load(image_path, target_size = c(299, 299))
@@ -405,12 +412,8 @@ concat <- rbind(concat,filtered_tags)
 
 ############################### Cloud ML Models (Require API keys)
 # Get tags from Azure Vision
-  # img <- image_read(image_path) # needed?
-  if (file.size(image_path)>4150000){
-    con <- file(image_path, "rb")
-    raw_vector <- readBin(con, what = raw(), n = 4150000)
+  if (file.size(image_path)>4150000){ # needed?
     resultsAzure <- analyze(vis, raw_vector, domain = "landmarks", feature_types = "tags")$tags
-    close(con)
   } else {
     resultsAzure <- analyze(vis, image_path, domain = "landmarks", feature_types = "tags")$tags
   }
@@ -492,13 +495,6 @@ date <- format(exif_data$CreateDate, format = "%d/%B/%Y")
 # Standalone Azure Computer Vision endpoint (must provide subscription key and cognitive services name)
 endp <- cognitive_endpoint(cognitiveservicesURL,
     service_type="ComputerVision", key=azure_api_key)
-
-# read the local image file as raw bytes, reducing to 4Mb (if needed) which is Azure's max limit
-if (file.size(image_path)>4150000){
-  raw_vector <- readBin(image_path, "raw", 4150000)
-} else {
-  raw_vector <- readBin(image_path, "raw", file.info(image_path)$size)
-}
 
 # call the cognitive endpoint to analyze the image for landmarks
 landmarkAzure <- call_cognitive_endpoint(endp, operation = "analyze",
@@ -721,16 +717,14 @@ if (lon!="") {
 }
 
 # Extract the text from the image using Azure Computer Vision API (OCR)
-if (file.size(image_path)>4150000){
-  text <- read_text(vis, raw_vector, detect_orientation = TRUE, language = "en")
+if (file.size(image_path)>4150000){ # needed?
+  textOCR <- read_text(vis, raw_vector, detect_orientation = TRUE, language = "en")
 } else {
-  text <- read_text(vis, image_path, detect_orientation = TRUE, language = "en")
+  textOCR <- read_text(vis, image_path, detect_orientation = TRUE, language = "en")
 }
 
-# If no text was found using OCR, try to describe the image using Azure AI:
-if (length(text)==0){
-  text <- analyze(vis, image_path, domain = "landmarks", feature_types = "description")$description$captions$text
-}
+# Describe the image using Azure AI:
+text <- analyze(vis, image_path, domain = "landmarks", feature_types = "description")$description$captions$text
 
 # Define a string for the Bing Chat prompt, that will generate the text for the social media post. Feel free to change this to your liking
 str <- ""
@@ -753,6 +747,5 @@ browseURL(url)
 # browseURL("https://www.bing.com/search?showconv=1&sendquery=1&q=Hello%20Bing")
 
 # Show main results in R Console, which could be used on prompt for Bing Chat
-  cat(" Hashtags:     ", hashtags, "\n", "GPS Coordin.: ", lat, ",", lon, "\n", "Landmark Name:", name, "\n", "Landm. Source:", source, "\n", "Text/Descript:", paste(text, collapse = ", "), "\n", "Full address: ", address, "\n", "City:         ", city, "\n", "Country:      ", country, "\n", "Camera :      ", exif_data$Make, exif_data$Model, "\n", "Date   :      ", date, "\n")
-
+  cat(" Hashtags:     ", hashtags, "\n", "GPS Coordin.: ", lat, ",", lon, "\n", "Landmark Name:", name, "\n", "Landm. Source:", source, "\n", "Text OCR     :", paste(textOCR, collapse = ", "), "\n", "Img. Descript:", paste(text, collapse = ", "), "\n", "Full address: ", address, "\n", "City:         ", city, "\n", "Country:      ", country, "\n", "Camera :      ", exif_data$Make, exif_data$Model, "\n", "Date   :      ", date, "\n")
 
