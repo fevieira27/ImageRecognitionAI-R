@@ -724,7 +724,12 @@ if (file.size(image_path)>4150000){ # needed?
 }
 
 # Describe the image using Azure AI:
-text <- analyze(vis, image_path, domain = "landmarks", feature_types = "description")$description$captions$text
+if (file.size(image_path)>4150000){ # needed?
+  text <- analyze(vis, raw_vector, domain = "landmarks", feature_types = "description")$description$captions$text
+} else {
+  text <- analyze(vis, image_path, domain = "landmarks", feature_types = "description")$description$captions$text
+}
+
 
 # Define a string for the Bing Chat prompt, that will generate the text for the social media post. Feel free to change this to your liking
 str <- ""
