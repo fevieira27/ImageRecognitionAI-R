@@ -531,9 +531,9 @@ result <- sapply(place_types, grepl, hashwords, fixed = TRUE)
 
 # Print which words from the Google Places API were found in the hashtags based on the image
 found_words <- place_types[result]
-tourism_tags <- c("castle","monastery","bridge","palace","statue","bell_cote")
+tourism_tags <- c("castle","monastery","bridge","palace","statue","bell_cote","hotel","fountain")
 if (length(tourism_tags[sapply(tourism_tags, grepl, hashwords, fixed = TRUE)])>0) {
-  found_words <- c(found_words, "tourist_attraction")
+  found_words <- c(found_words, "tourist_attraction", "travel")
 }
 
 url <- ""
@@ -627,13 +627,27 @@ if(exists("df_land") && all(c("latitude", "longitude") %in% names(df_land))){ # 
 	    landmarks <- rbind(landmarks, df_land2, fill=TRUE)  
 	}
   }
+  
+  # Also bringing business POI, to check GPS coordinates and try to find a suitable one
+  businessPOI <- sapply(content$resourceSets[[1]]$resources[[1]]$businessesAtLocation, has_any_word, words = c(found_words, unlist(strsplit(hashwords, " "))))
+  businessPOI <- content$resourceSets[[1]]$resources[[1]]$businessesAtLocation[businessPOI]
+  businessPOI <- dplyr::bind_rows(lapply(businessPOI, as.data.frame.list))
+  df_land3 <- businessPOI %>% select(businessInfo.entityName, businessAddress.latitude, businessAddress.longitude)
+  colnames(df_land3) <- c("description", "latitude", "longitude")
+  if(exists("df_land3") && all(c("latitude", "longitude") %in% names(df_land3))){ # Bing Location has found Business POI
+    df_land3$source <- "Bing Location Recognition"
+    landmarks <- rbind(landmarks, df_land3, fill=TRUE)  
+  }
+
 }
 
-if (length(landmarks$score)!=0){ # Google Vision has found landmarks
+if (length(landmarks$score)!=0){ # Google or Azure Vision have found landmarks
   landmarks <- landmarks %>% select(description, latitude, longitude, source, score)
 } else {
     if (length(landmarks$description)!=0){ # Google Places or Bing Location have found possible POI
 	landmarks <- landmarks %>% select(description, latitude, longitude, source)
+	# removing rows with NA on the description
+	landmarks <- landmarks[complete.cases(landmarks[ , description]),]	    
     } else {
   	landmarks$latitude <- ""
 	landmarks$longitude <- ""
