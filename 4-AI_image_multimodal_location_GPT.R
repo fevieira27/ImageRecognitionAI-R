@@ -718,9 +718,7 @@ if (lon!="") {
     street_check <- sapply(address$results[[1]]$address_components, has_any_word, words = "route")
     if (length(address$results[[1]]$address_components[street_check])!=0) {
       street <- address$results[[1]]$address_components[street_check]
-    }
-    if (length(street)>0){
-    	street <- street[[1]]$long_name
+	street <- street[[1]]$long_name
     } else {
 	street <- ""
     }
