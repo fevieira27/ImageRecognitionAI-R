@@ -130,15 +130,15 @@ img <- load.image(image_path)
 
 # Get the image dimensions
 info <- image_info(magick::image_read(file.path(image_path)))
-# Check if the image is vertical
-if (info$height > info$width) {
+# Check if the image is horizontal
+if (info$width > info$height) {
   # Rotate the image by 90 degrees clockwise
-  img_rotated <- imrotate(img, -90)
+  img_rotated <- imrotate(img, 90)
 } else {
   # Keep the image as it is
   img_rotated <- img
 }
-plot(img)
+plot(img_rotated) ## All my photos for social media are on the vertical position, but change this to "img" if you don't want to see your photos always plotted that way
 
 # read the local image file as raw bytes, reducing to 4Mb (if needed) which is Azure's max limit
 if (file.size(image_path)>4150000){
