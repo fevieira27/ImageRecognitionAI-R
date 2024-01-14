@@ -701,18 +701,35 @@ if (length(landmarks$latitude)==1 && landmarks$latitude=="") {
 # Find the address by reverse geocoding the coordinates using ggmap
 if (lon!="") {
   address <- revgeocode(c(lon, lat), output = "all")
-  if (address$results[[1]]$address_components[[4]]$long_name != ""){
+  if (address$results[[1]]$address_components[[1]]$long_name != ""){
     city_check <- sapply(address$results[[1]]$address_components, has_any_word, words = "locality")
-    city <- address$results[[1]]$address_components[city_check]
-    city <- city[[1]]$long_name
+    if (length(address$results[[1]]$address_components[city_check])!=0){
+      city <- address$results[[1]]$address_components[city_check]
+      city <- city[[1]]$long_name
+    } else {
+	city_check <- sapply(address$results[[1]]$address_components, has_any_word, words = "postal_town")
+	if (length(address$results[[1]]$address_components[city_check])!=0) {
+	  city <- address$results[[1]]$address_components[city_check]
+	  city <- city[[1]]$long_name
+	} else {
+	  city <- ""
+	}
+    }
     street_check <- sapply(address$results[[1]]$address_components, has_any_word, words = "route")
-    street <- address$results[[1]]$address_components[street_check]
-    street <- street[[1]]$long_name
+    if (length(address$results[[1]]$address_components[street_check])!=0) {
+      street <- address$results[[1]]$address_components[street_check]
+    }
+    if (length(street)>0){
+    	street <- street[[1]]$long_name
+    } else {
+	street <- ""
+    }
   } else {
     city <- revgeo(lon, lat, provider = "bing", API = bing_api_key, output = NULL, item = "city")
   }
-  if (address$results[[1]]$address_components[[5]]$long_name != ""){
-    country_check <- sapply(address$results[[1]]$address_components, has_any_word, words = "country")
+
+  country_check <- sapply(address$results[[1]]$address_components, has_any_word, words = "country")
+  if (length(address$results[[1]]$address_components[country_check])!=0) {
     country <- address$results[[1]]$address_components[country_check]
     country <- country[[1]]$long_name
   } else {
