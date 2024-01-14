@@ -632,13 +632,16 @@ if(exists("df_land") && all(c("latitude", "longitude") %in% names(df_land))){ # 
   businessPOI <- sapply(content$resourceSets[[1]]$resources[[1]]$businessesAtLocation, has_any_word, words = c(found_words, unlist(strsplit(hashwords, " "))))
   businessPOI <- content$resourceSets[[1]]$resources[[1]]$businessesAtLocation[businessPOI]
   businessPOI <- dplyr::bind_rows(lapply(businessPOI, as.data.frame.list))
-  df_land3 <- businessPOI %>% select(businessInfo.entityName, businessAddress.latitude, businessAddress.longitude)
-  colnames(df_land3) <- c("description", "latitude", "longitude")
-  if(exists("df_land3") && all(c("latitude", "longitude") %in% names(df_land3))){ # Bing Location has found Business POI
-    df_land3$source <- "Bing Location Recognition"
-    landmarks <- rbind(landmarks, df_land3, fill=TRUE)  
-  }
 
+  # Check if businessPOI returned something
+  if (length(businessPOI)!=0){
+    df_land3 <- businessPOI %>% select(businessInfo.entityName, businessAddress.latitude, businessAddress.longitude)
+    colnames(df_land3) <- c("description", "latitude", "longitude")
+    if(exists("df_land3") && all(c("latitude", "longitude") %in% names(df_land3))){ # Bing Location has found Business POI
+      df_land3$source <- "Bing Location Recognition"
+      landmarks <- rbind(landmarks, df_land3, fill=TRUE)  
+    }
+  }
 }
 
 if (length(landmarks$score)!=0){ # Google or Azure Vision have found landmarks
@@ -649,9 +652,24 @@ if (length(landmarks$score)!=0){ # Google or Azure Vision have found landmarks
 	# removing rows with NA on the description
 	landmarks <- landmarks[complete.cases(landmarks[ , description]),]	    
     } else {
-  	landmarks$latitude <- ""
-	landmarks$longitude <- ""
-	landmarks$source <- ""
+	# If no landmarks were found so far, bring all Google Maps results (without key words search) and select based on distance to GPS coordinates
+	df_land <- dplyr::bind_rows(lapply(filtered_content, as.data.frame.list))
+
+	# Keep only the 3 columns that are of interest
+	df_land <- df_land[, grepl("name|lat|lng", colnames(df_land))]
+
+	# Rename and reorder columns to keep the df consistent with other solution
+	colnames(df_land) <- c("latitude", "longitude", "description")
+
+	if(exists("df_land") && all(c("latitude", "longitude") %in% names(df_land))){ # Google Places found landmarks
+	  df_land$source <- "Google Maps Places"
+	  df_land <- df_land %>% select(description, latitude, longitude, source)
+	  landmarks <- rbind(landmarks, df_land, fill=TRUE)  
+	} else {  
+  	  landmarks$latitude <- ""
+	  landmarks$longitude <- ""
+	  landmarks$source <- ""
+	}
     }
 }
 	
@@ -765,8 +783,21 @@ str <- ""
 if (name=="Unknown"){
   str <- paste0("Give me captions with the informative tone for a Story Post on the Platform Instagram about a photo of ",street,", ",city,"; Use at least these hashtags at the end of the captions, but feel free to add more: ",hashtags)
 } else{
-  str <- paste0("Give me captions with the informative tone for a Story Post on the Platform Instagram about a photo of the ",name,", ",city,"; Use at least these hashtags at the end of the captions, but feel free to add more: ",hashtags)
+  if (name==city){
+    str <- paste0("Give me captions with the informative tone for a Story Post on the Platform Instagram about a photo of ",text," in ",name,", ",city,"; Use at least these hashtags at the end of the captions, but feel free to add more: ",hashtags)
+  } else {
+    str <- paste0("Give me captions with the informative tone for a Story Post on the Platform Instagram about a photo of the ",name,", ",city,"; Use at least these hashtags at the end of the captions, but feel free to add more: ",hashtags)
+  }
 }
+
+} else{
+  if (name==city){
+    str <- paste0("Write a Story Post for the Platform Instagram about a photo of ",text," in ",name,", ",city,", following these steps: 1- Search for the name of the place on the web and get some information about its history, features and significance; 2- Write a header with the name of the place, the city, the country, the flag emoji and the date of the visit in brackets: (",date,"); 3- Write a dot on a separate line; 4- Add these hashtags ",hashtags," and generate 20 more related to the place, the city, the country, the theme, the camera used (",exif_data$Make," ",exif_data$Model,") and the location itself; Use the informative tone.")
+  } else {
+    str <- paste0("Write a Story Post for the Platform Instagram about a photo of the ",name,", ",city,", following these steps: 1- Search for the name of the place on the web and get some information about its history, features and significance; 2- Write a header with the name of the place, the city, the country, the flag emoji and the date of the visit in brackets: (",date,"); 3- Write a dot on a separate line; 4- Add these hashtags ",hashtags," and generate 20 more related to the place, the city, the country, the theme, the camera used (",exif_data$Make," ",exif_data$Model,") and the location itself; Use the informative tone.")
+  }
+}
+
 
 # Encode the string using URLencode
 str_encoded <- URLencode(str, reserved = TRUE)
