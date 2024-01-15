@@ -687,13 +687,20 @@ if (length(landmarks$latitude)==1 && landmarks$latitude=="") {
     } 
 }else { # Identify which of the probable landmarks is closer to the actual image exif GPS data
    if (length(landmarks$score)!=0){ # Google Vision has found landmarks, so use the highest score
-		# sort df by score in descending order
-		landmarks <- landmarks[order(landmarks$score, decreasing = TRUE), ]
-		landmarks <- head(landmarks, 1)
-		name <- landmarks$description
-	    	lat <- landmarks$latitude
-	    	lon <- landmarks$longitude
-	   	source <- landmarks$source
+	# sort df by score in descending order
+	landmarks <- landmarks[order(landmarks$score, decreasing = TRUE), ]
+	landmarks <- head(landmarks, 1)
+	name <- landmarks$description
+	if (landmarks$latitude!="" && landmarks$longitude!=""){
+	  lat <- landmarks$latitude
+	  lon <- landmarks$longitude
+	} else {
+	  if (exif_data$GPSLatitude != "") {
+	      lat <- exif_data$GPSLatitude
+	      lon <- exif_data$GPSLongitude
+	  }
+	}
+	source <- landmarks$source
    } else { # Find the POI from Google Places or Bing Location that is closest to GPS coordinates
    	if (exif_data$GPSLatitude != "") { # If there are GPS coordinates on image exif data    # Identify which of the probable landmarks is closer to the actual image exif data
 	    dist <- distm(landmarks[, c("longitude", "latitude")], exif_data[, c("GPSLongitude", "GPSLatitude")])
