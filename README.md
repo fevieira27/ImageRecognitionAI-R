@@ -48,7 +48,7 @@ Based on the image recognition tags and location data gathered, ImageRecognition
 - Microsoft Azure API key, which can be obtained <a href="https://azure.microsoft.com/en-us">here</a>. The features required for this project are: **Computer Vision** and **Congnitive Services**. Those are free to use up to daily and monthly limits estipulated by Microsoft.
 - Bing Maps API key, which can be obtained for free <a href="https://www.microsoft.com/en-us/maps/bing-maps/create-a-bing-maps-key">here</a>. 
 
-The free limits on both Azure and Google Cloud are high enough for running theses scripts manually, one picture at a time. However, be aware that if you tweak this code to use some kind of automation for batch analysis of several pictures at once, you may go above the free limit and will be charged by those platforms.
+The free limits on both Azure and Google Cloud are high enough for running these scripts manually, one picture at a time. However, be aware that if you tweak this code to use some kind of automation for batch analysis of several pictures at once, you may go above the free limit and will be charged by those platforms.
 
 # Search Hit Counter
 ![GitHub search hit counter](https://img.shields.io/github/search/fevieira27/ImageRecognitionAI-R/r)
