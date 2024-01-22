@@ -44,8 +44,8 @@ Based on the image recognition tags and location data gathered, ImageRecognition
 - Google Cloud Vision AI
 
 # Requirements
-- Google Cloud API key, which can be obtained <a href="https://cloud.google.com/">here</a>. The features required for this project are: Cloud Vision API, Geocoding API, Geolocation API, Google Cloud APIs, Places API and Roads API. All those are free to use up to daily and monthly limits estipulated by Google.
-- Microsoft Azure API key, which can be obtained <a href="https://azure.microsoft.com/en-us">here</a>. The features required for this project are: Computer Vision and Congnitive Services. Those are free to use up to daily and monthly limits estipulated by Microsoft.
+- Google Cloud API key, which can be obtained <a href="https://cloud.google.com/">here</a>. The features required for this project are: **Cloud Vision API**, **Geocoding API**, **Geolocation API**, **Google Cloud APIs**, **Places API** and **Roads API**. All those are free to use up to daily and monthly limits estipulated by Google.
+- Microsoft Azure API key, which can be obtained <a href="https://azure.microsoft.com/en-us">here</a>. The features required for this project are: **Computer Vision** and **Congnitive Services**. Those are free to use up to daily and monthly limits estipulated by Microsoft.
 - Bing Maps API key, which can be obtained for free <a href="https://www.microsoft.com/en-us/maps/bing-maps/create-a-bing-maps-key">here</a>. 
 
 The free limits on both Azure and Google Cloud are high enough for running theses scripts manually, one picture at a time. However, be aware that if you tweak this code to use some kind of automation for batch analysis of several pictures at once, you may go above the free limit and will be charged by those platforms.
