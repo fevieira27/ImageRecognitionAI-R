@@ -44,7 +44,7 @@ Based on the image recognition tags and location data gathered, ImageRecognition
 - Google Cloud Vision AI
 
 # Requirements
-- Google Cloud API key, which can be obtained <a href="https://cloud.google.com/">here</a>. The features required for this project are: **Cloud Vision API**, **Geocoding API**, **Geolocation API**, **Google Cloud APIs**, **Places API** and **Roads API**. All those are free to use up to daily and monthly limits estipulated by Google.
+- Google Cloud API key, which can be obtained <a href="https://console.cloud.google.com/iam-admin/serviceaccounts">here</a>. The features required for this project are: **Cloud Vision API**, **Geocoding API**, **Geolocation API**, **Google Cloud APIs**, **Places API** and **Roads API**. All those are free to use up to daily and monthly limits estipulated by Google.
 - Microsoft Azure API key, which can be obtained <a href="https://azure.microsoft.com/en-us">here</a>. The features required for this project are: **Computer Vision** and **Cognitive Services**. Those are free to use up to daily and monthly limits estipulated by Microsoft.
 - Bing Maps API key, which can be obtained for free <a href="https://www.microsoft.com/en-us/maps/bing-maps/create-a-bing-maps-key">here</a>. 
 
