@@ -20,7 +20,7 @@ Based on the image recognition tags and location data gathered, ImageRecognition
 - The third script still uses all the previous 15 AI models, but is also using **Google and Azure Vision AI** (API keys required) to further improve tags and to identify landmarks and addresses ([3-AI_image_multimodal_location.R](3-AI_image_multimodal_location.R));
 ![Example of complex script with Vision APIs for Location](./img/Location_Example.jpg)
 
-- Based on all the above knowledge about the image, the forth script improves the results further by also using **Google Maps API and Bing Maps API** (API keys required) to more accurately search for the location or landmark name based on GPS data and hashtags found on image. Finally, it generates a **prompt for Bing Chat** on the default browser requesting a social media text for easier posting, feeding the AI with probable location and hashtags identified ([4-AI_image_multimodal_location_GPT.R](4-AI_image_multimodal_location_GPT.R)).
+- Based on all the above knowledge about the image, the forth script improves the results further by also using **Google Maps API and Bing Maps API** (API keys required) to more accurately search for the location or landmark name based on GPS data and hashtags found on image. Finally, it generates a **prompt for Bing Copilot** on the default browser, requesting a social media text for easier posting, feeding the Copilot LLM with probable location and hashtags identified ([4-AI_image_multimodal_location_GPT.R](4-AI_image_multimodal_location_GPT.R)).
 ![Example of complex script with Vision and Maps APIs for Location](./img/Location_GPT_Example.jpg)
 ![Example of GPT Prompt](./img/GPT_Example.jpg)
 
